@@ -28,5 +28,4 @@ build/
 .next/
 
 # Local data
-news.json
 uploads/
