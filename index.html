@@ -41,19 +41,10 @@
                         <p>Connect with other players, get whitelisted, and stay updated on server events!</p>
                         <a href="https://dsc.gg/bananasteal" target="_blank" class="discord-btn">Join Discord</a>
                     </div>
-                    <div class="info-card news-card">
+                    <div class="info-card news-card" onclick="openNewsModal()">
                         <h2>Current News</h2>
                         <div id="news-container">
-                            <div class="news-item">
-                                <h4>Welcome to BananaSteal!</h4>
-                                <p>The server is now open to whitelisted players. Join our Discord to get access!</p>
-                                <span class="news-date">January 18, 2026</span>
-                            </div>
-                            <div class="news-item">
-                                <h4>Seasonal Events Coming</h4>
-                                <p>Stay tuned for exciting seasonal events and rewards!</p>
-                                <span class="news-date">January 15, 2026</span>
-                            </div>
+                            <!-- News loaded dynamically from server -->
                         </div>
                     </div>
                 </div>
@@ -64,6 +55,19 @@
             <p>&copy; 2026 BananaSteal. All rights reserved.</p>
         </footer>
     </main>
+
+    <!-- News Modal -->
+    <div id="news-modal" class="news-modal">
+        <div class="news-modal-content">
+            <div class="news-modal-header">
+                <h2>📰 All News</h2>
+                <button class="news-modal-close" onclick="closeNewsModal()">&times;</button>
+            </div>
+            <div id="news-modal-list" class="news-modal-list">
+                <!-- All news items displayed here -->
+            </div>
+        </div>
+    </div>
 
     <script src="config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>

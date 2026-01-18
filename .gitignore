@@ -26,4 +26,7 @@ npm-debug.log*
 dist/
 build/
 .next/
-admin.html
+
+# Local data
+news.json
+uploads/

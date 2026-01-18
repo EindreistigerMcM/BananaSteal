@@ -93,7 +93,10 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 animate();
 
-// Fetch Discord news when page loads
+// Fetch Discord news immediately and on page load
+fetchDiscordNews();
+
+// Also fetch on DOMContentLoaded as backup
 document.addEventListener('DOMContentLoaded', fetchDiscordNews);
 
 // Auto-refresh news every 30 seconds
@@ -127,7 +130,7 @@ async function fetchDiscordNews() {
         const messages = await response.json();
         displayNews(messages);
     } catch (error) {
-        console.log('Backend unavailable. Using default news.');
+        console.error('Error fetching news:', error);
     }
 }
 
@@ -136,7 +139,13 @@ function displayNews(messages) {
     const newsContainer = document.getElementById('news-container');
     if (!newsContainer) return;
     
-    if (!messages || messages.length === 0) return;
+    // Store messages globally for modal
+    window.allNewsMessages = messages || [];
+    
+    if (!messages || messages.length === 0) {
+        newsContainer.innerHTML = '';
+        return;
+    }
     
     newsContainer.innerHTML = '';
     
@@ -166,6 +175,64 @@ function displayNews(messages) {
         newsContainer.appendChild(newsItem);
     });
 }
+
+// Open news modal with all news
+function openNewsModal() {
+    const modal = document.getElementById('news-modal');
+    const modalList = document.getElementById('news-modal-list');
+    
+    if (!window.allNewsMessages || window.allNewsMessages.length === 0) {
+        modalList.innerHTML = '<p style="text-align: center; color: #888;">No news available yet.</p>';
+    } else {
+        modalList.innerHTML = '';
+        window.allNewsMessages.forEach(message => {
+            const date = new Date(message.timestamp).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            let renderedContent = message.content;
+            if (typeof marked !== 'undefined') {
+                renderedContent = marked.parse(message.content);
+            } else {
+                renderedContent = escapeHtml(message.content).replace(/\n/g, '<br>');
+            }
+            
+            const newsItem = document.createElement('div');
+            newsItem.className = 'news-modal-item';
+            newsItem.innerHTML = `
+                <div class="news-content">${renderedContent}</div>
+                <span class="news-modal-date">${date}</span>
+            `;
+            
+            modalList.appendChild(newsItem);
+        });
+    }
+    
+    modal.classList.add('active');
+}
+
+// Close news modal
+function closeNewsModal() {
+    const modal = document.getElementById('news-modal');
+    modal.classList.remove('active');
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', (e) => {
+    const modal = document.getElementById('news-modal');
+    if (e.target === modal) {
+        closeNewsModal();
+    }
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeNewsModal();
+    }
+});
 
 // Helper function to escape HTML
 function escapeHtml(text) {
