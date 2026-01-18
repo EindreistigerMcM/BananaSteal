@@ -1,9 +1,44 @@
+/* -----------------------
+   MONOCRAFT FONT IMPORT
+----------------------- */
+@font-face {
+    font-family: 'Monocraft';
+    src: url('/Monocraft.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* -----------------------
+   GLOBAL STYLES
+----------------------- */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+body {
+    font-family: 'Monocraft', monospace; /* Use Monocraft */
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #888888 transparent;
+    -webkit-font-smoothing: none; /* Pixel-perfect font */
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* -----------------------
+   FALLBACK FOR CODE BLOCKS
+----------------------- */
+code, pre {
+    font-family: 'Monocraft', monospace;
+}
+
+/* -----------------------
+   REST OF YOUR CSS
+   (keep your colors, scrollbars, cards, hero, modals, etc.)
+----------------------- */
 :root {
     --primary-color: #ffd700;
     --secondary-color: #8b4513;
@@ -30,19 +65,7 @@
     background: #aaaaaa;
 }
 
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: var(--dark-bg);
-    color: var(--text-color);
-    overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: #888888 transparent;
-}
-
-.background {
-    display: none;
-}
-
+/* Canvas Background */
 #background-canvas {
     position: absolute;
     top: 0;
@@ -52,7 +75,6 @@ body {
     z-index: -1;
     background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
 }
-
 /* Navbar */
 .navbar {
     background-color: rgba(26, 26, 26, 0.95);
