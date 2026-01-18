@@ -282,6 +282,61 @@ main {
     border-bottom: none;
 }
 
+.news-content h1 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.news-content h2 {
+    color: var(--accent);
+    font-size: 1.3rem;
+    margin: 0.8rem 0 0.4rem 0;
+}
+
+.news-content h3 {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    margin: 0.6rem 0 0.3rem 0;
+}
+
+.news-content p {
+    color: #cccccc;
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.news-content ul, .news-content ol {
+    margin: 0.5rem 0 0.5rem 1.5rem;
+    color: #cccccc;
+}
+
+.news-content li {
+    margin-bottom: 0.3rem;
+}
+
+.news-content code {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    color: #90ee90;
+}
+
+.news-content pre {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 0.8rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 0.5rem 0;
+}
+
+.news-content pre code {
+    padding: 0;
+    background-color: transparent;
+}
+
 .news-item h4 {
     color: var(--primary-color);
     margin-bottom: 0.5rem;

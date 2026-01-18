@@ -96,6 +96,9 @@ animate();
 // Fetch Discord news when page loads
 document.addEventListener('DOMContentLoaded', fetchDiscordNews);
 
+// Auto-refresh news every 30 seconds
+setInterval(fetchDiscordNews, 30000);
+
 // Copy to clipboard function
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
@@ -141,19 +144,22 @@ function displayNews(messages) {
         const newsItem = document.createElement('div');
         newsItem.className = 'news-item';
         
-        const lines = message.content.split('\n');
-        const title = lines[0] || 'Server Update';
-        const content = lines.slice(1).join('\n').trim() || message.content;
-        
         const date = new Date(message.timestamp).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         });
         
+        // Render markdown if marked library is available
+        let renderedContent = message.content;
+        if (typeof marked !== 'undefined') {
+            renderedContent = marked.parse(message.content);
+        } else {
+            renderedContent = escapeHtml(message.content).replace(/\n/g, '<br>');
+        }
+        
         newsItem.innerHTML = `
-            <h4>${escapeHtml(title)}</h4>
-            <p>${escapeHtml(content).replace(/\n/g, '<br>')}</p>
+            <div class="news-content">${renderedContent}</div>
             <span class="news-date">${date}</span>
         `;
         

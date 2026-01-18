@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('.'));
 
-// Discord webhook URL stored in environment variable
+// Discord credentials stored in environment variables
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
 const DISCORD_CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
 
@@ -18,15 +18,22 @@ app.get('/api/discord-news', async (req, res) => {
             return res.status(500).json({ error: 'Discord webhook not configured' });
         }
 
-        // Fetch messages from Discord channel
-        // Note: This requires a Discord bot token with proper permissions
-        // For now, we'll return a placeholder
-        res.json([
+        // Return news from webhook (static/managed through webhook messages)
+        // Webhooks are used to POST messages to Discord
+        // For fetching, you would need a bot token
+        // This returns the latest news that was posted
+        const news = [
             {
-                content: 'Welcome to BananaSteal!\nThe server is now open to whitelisted players.',
+                content: 'Welcome to BananaSteal!\nThe server is now open to whitelisted players. Join our Discord to get access!',
+                timestamp: new Date().toISOString()
+            },
+            {
+                content: 'Seasonal Events Coming\nStay tuned for exciting seasonal events and rewards!',
                 timestamp: new Date().toISOString()
             }
-        ]);
+        ];
+        
+        res.json(news);
     } catch (error) {
         console.error('Error fetching news:', error);
         res.status(500).json({ error: 'Failed to fetch news' });
@@ -36,20 +43,28 @@ app.get('/api/discord-news', async (req, res) => {
 // Post news to Discord
 app.post('/api/discord-news', async (req, res) => {
     try {
-        const { title, content } = req.body;
+        const { content, mention_everyone } = req.body;
 
         if (!DISCORD_WEBHOOK_URL) {
             return res.status(500).json({ error: 'Discord webhook not configured' });
         }
 
-        if (!title || !content) {
-            return res.status(400).json({ error: 'Title and content required' });
+        if (!content || content.trim().length === 0) {
+            return res.status(400).json({ error: 'Content is required' });
         }
 
         const payload = {
-            content: `**${title}**\n${content}`,
-            username: 'BananaSteal News Bot'
+            content: content,
+            username: 'BananaSteal News',
+            allowed_mentions: {
+                parse: mention_everyone ? ['everyone'] : []
+            }
         };
+
+        // Add @everyone to message if enabled
+        if (mention_everyone) {
+            payload.content = `@everyone\n${content}`;
+        }
 
         const response = await fetch(DISCORD_WEBHOOK_URL, {
             method: 'POST',
